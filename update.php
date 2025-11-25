@@ -2,19 +2,16 @@
 session_start();
 require_once 'db.php';
 
-// Ambil old/errors dari session (jika ada) — kita baca lalu hapus agar tidak persist
 $old = $_SESSION['old'] ?? [];
 $errors = $_SESSION['errors'] ?? [];
 unset($_SESSION['old'], $_SESSION['errors']);
 
-// Validasi ID dari query string
 $id = $_GET['id'] ?? null;
 if (!$id || !ctype_digit($id)) {
     die("ID tidak valid.");
 }
 $id = (int)$id;
 
-// Ambil data dari database
 $sql = "SELECT id, mata_kuliah, deskripsi_tugas, status, dosen, deadline 
         FROM tugas 
         WHERE id = ?";
@@ -32,23 +29,18 @@ if (!$task) {
     die("Data tidak ditemukan.");
 }
 
-// Siapkan nilai yang akan ditampilkan di form:
-// Prioritaskan nilai dari $_SESSION['old'] (jika validasi sebelumnya gagal dan user dikembalikan),
-// kalau tidak ada, gunakan nilai dari DB ($task).
 $matkul_val    = isset($old['mata_kuliah']) ? $old['mata_kuliah'] : $task['mata_kuliah'];
 $deskripsi_val = isset($old['deskripsi_tugas']) ? $old['deskripsi_tugas'] : $task['deskripsi_tugas'];
 $status_val    = isset($old['status']) ? $old['status'] : $task['status'];
 $dosen_val     = isset($old['dosen']) ? $old['dosen'] : $task['dosen'];
 $deadline_val  = isset($old['deadline']) ? $old['deadline'] : $task['deadline'];
 
-// Escape untuk output HTML
 $matkul       = htmlspecialchars($matkul_val, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 $deskripsi    = htmlspecialchars($deskripsi_val, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 $status       = htmlspecialchars($status_val, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 $dosen        = htmlspecialchars($dosen_val, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 $deadline     = htmlspecialchars($deadline_val, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
-// Helper untuk menandai input invalid jika error per-field ada
 function isInvalidClass($errors, $field) {
     return isset($errors[$field]) ? 'is-invalid' : '';
 }

@@ -1,14 +1,10 @@
 <?php
-// index.php
 require_once 'db.php';
 
-// Ambil param pencarian dari query string
 $q = isset($_GET['q']) ? trim($_GET['q']) : '';
 $status_filter = isset($_GET['status_filter']) ? trim($_GET['status_filter']) : '';
 
-// Siapkan query dan statement sesuai kondisi
 if ($q !== '' && $status_filter !== '') {
-    // kedua filter aktif
     $sql = "SELECT id, mata_kuliah, deskripsi_tugas, status, dosen, deadline
             FROM tugas
             WHERE (mata_kuliah LIKE ? OR dosen LIKE ?)
@@ -18,7 +14,6 @@ if ($q !== '' && $status_filter !== '') {
     $like = "%{$q}%";
     mysqli_stmt_bind_param($stmt, "sss", $like, $like, $status_filter);
 } elseif ($q !== '') {
-    // hanya kata kunci
     $sql = "SELECT id, mata_kuliah, deskripsi_tugas, status, dosen, deadline
             FROM tugas
             WHERE mata_kuliah LIKE ? OR dosen LIKE ?
@@ -27,7 +22,6 @@ if ($q !== '' && $status_filter !== '') {
     $like = "%{$q}%";
     mysqli_stmt_bind_param($stmt, "ss", $like, $like);
 } elseif ($status_filter !== '') {
-    // hanya filter status
     $sql = "SELECT id, mata_kuliah, deskripsi_tugas, status, dosen, deadline
             FROM tugas
             WHERE status = ?
@@ -35,14 +29,12 @@ if ($q !== '' && $status_filter !== '') {
     $stmt = mysqli_prepare($conn, $sql);
     mysqli_stmt_bind_param($stmt, "s", $status_filter);
 } else {
-    // tanpa filter
     $sql = "SELECT id, mata_kuliah, deskripsi_tugas, status, dosen, deadline
             FROM tugas
             ORDER BY id DESC";
     $stmt = mysqli_prepare($conn, $sql);
 }
 
-// eksekusi dan ambil hasil
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 ?>

@@ -1,19 +1,11 @@
 <?php 
-// 1. Memulai sesi
 session_start(); 
 
-// 2. Mengambil old input (data yang sebelumnya diisi user)
 $old = $_SESSION['old'] ?? [];
-
-// 3. Mengambil errors (pesan kesalahan validasi)
 $errors = $_SESSION['errors'] ?? [];
 
-// 4. Menghapus data sesi agar tidak muncul saat refresh normal
 unset($_SESSION['errors']);
 unset($_SESSION['old']);
-
-// Catatan: Variabel $old dan $errors akan tetap tersedia
-// di kode HTML di bawah sebelum sesi dihapus
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -38,7 +30,7 @@ unset($_SESSION['old']);
                     <div class="alert alert-success">
                         <?= htmlspecialchars($_SESSION['success']); ?>
                     </div>
-                    <?php unset($_SESSION['success']); // Hapus pesan sukses setelah ditampilkan ?>
+                    <?php unset($_SESSION['success']); ?>
                 <?php endif; ?>
 
                 <form action="process/store.php" method="POST" class="p-4 bg-white shadow rounded" novalidate>
