@@ -1,3 +1,5 @@
-anggota kelompok : 
-zaki almukhtarom-055
-M.Althaf Gifari-062
+## ✨ Daftar Anggota Kelompok
+
+- **Zaki Almukhtarom** — `055`
+- **M. Althaf Gifari** — `062`
+
